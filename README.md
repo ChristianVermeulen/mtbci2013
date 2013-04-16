@@ -19,3 +19,5 @@ Here are some more ideas to make this even better:
 Feel free to work on any of these or add your own to this list.
 
 Just fork and send me pul requests and I will keep everything up to date!
+
+Keep track of them on the [issuetracker](https://github.com/christianvermeulen/mtbci2013/issues?state=open)!
