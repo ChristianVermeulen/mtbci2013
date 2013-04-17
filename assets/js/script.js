@@ -1,7 +1,7 @@
 $(function(){
 
 	$('#countdown').countdown({
-		timestamp	: new Date(2013, 04, 24, 12, 30),
+		timestamp	: new Date("April 24, 2013 12:30:00").getTime(),
 		callback	: function(days, hours, minutes, seconds){
 
 			var message = "";
