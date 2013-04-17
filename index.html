@@ -102,7 +102,7 @@
                 var out = "<div>";
                 out += '<img src="'+this.gravatar+'"/>';
                 out += '<h2>'+this.author+'</h2>';
-                out += '<p class="title">'+ts.getDate()+' April <span>om</span> '+ts.getHours()+':'+ts.getMinutes()+'h <span>naar</span> '+this.repo.name+'</p>';
+                out += '<p class="title">'+ts.getDate()+' April <span>om</span> '+('0' + ts.getHours()).slice(-2)+':'+('0' + ts.getMinutes()).slice(-2)+'h <span>naar</span> '+this.repo.name+'</p>';
                 out += '<p>'+this.message+'</p>';
                 out += '</div>';
                 $("#github-commits").append(out);
