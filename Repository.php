@@ -7,7 +7,7 @@ class Repository
     private $description;
     private $gitid;
     private $ownername;
-    private $ownermail;
+    private $owneremail;
     private $url;
     private $db;
 
@@ -23,7 +23,11 @@ class Repository
       */
     private function loadRepo($repository)
     {
-        $query = $this->db->query("SELECT * FROM repositories WHERE gitid = '".$repository->id."'");
+        if(gettype($repository) === "integer")
+            $query = $this->db->query("SELECT * FROM repositories WHERE id = '".$repository."'");
+        else
+            $query = $this->db->query("SELECT * FROM repositories WHERE gitid = '".$repository->id."'");
+
         if($query->num_rows > 0 && $repo = $query->fetch_object())
         {
             $this->id = $repo->id;
@@ -87,5 +91,21 @@ class Repository
     public function newCommit($commit)
     {
         $commit = new Commit($commit, $this->id);
+    }
+
+    /**
+     * Get array of the repo
+     */
+    public function getRepo()
+    {
+        $repo = array();
+        $repo['id'] = $this->id;
+        $repo['name'] = $this->name;
+        $repo['description'] = $this->description;
+        $repo['gitid'] = $this->gitid;
+        $repo['ownername'] = $this->ownername;
+        $repo['owneremail'] = $this->owneremail;
+        $repo['url'] = $this->url;
+        return $repo;
     }
 }

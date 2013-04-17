@@ -11,9 +11,10 @@ class Commit
     private $timestamp;
     private $url;
     private $repo;
+    private $gravatar;
     private $db;
 
-    public function __construct($commit, $repo)
+    public function __construct($commit, $repo = 0)
     {
         $db = new Connection();
         $this->db = $db->db;
@@ -26,7 +27,11 @@ class Commit
       */
     private function loadCommit($commit)
     {
-        $query = $this->db->query("SELECT * FROM commits WHERE gitid = '".$commit->id."'");
+        if(gettype($commit) === "integer")
+            $query = $this->db->query("SELECT * FROM commits WHERE  id = '".$commit."'");
+        else
+            $query = $this->db->query("SELECT * FROM commits WHERE gitid = '".$commit->id."'");
+
         if($query->num_rows > 0 && $com = $query->fetch_object())
         {
             $this->id = $com->id;
@@ -35,7 +40,7 @@ class Commit
             $this->username = $com->username;
             $this->gitid = $com->gitid;
             $this->message = $com->message;
-            $this->timestamp = $com->timestamp;
+            $this->timestamp = $com->created;
             $this->url = $com->url;
             $this->repo = $com->repoid;
         }
@@ -51,9 +56,9 @@ class Commit
             $this->timestamp = $ts[0];
 
             $this->url = $commit->url;
-            var_dump("loading commit from data");
             $this->saveCommit();
         }
+        $this->gravatar = "http://www.gravatar.com/avatar/".md5($this->email)."?s=200";
     }
 
     /**
@@ -92,6 +97,25 @@ class Commit
         {
             var_dump($this->db->error);
         }
-        var_dump("saved commit with: ".$query);
+    }
+
+    /**
+     * Serialize the commit to send towards frontend
+     */
+    public function getCommit()
+    {
+        $commit = array();
+        $commit['id'] = $this->id;
+        $commit['author'] = $this->author;
+        $commit['email'] = $this->email;
+        $commit['username'] = $this->username;
+        $commit['gitid'] = $this->gitid;
+        $commit['message'] = $this->message;
+        $commit['timestamp'] = $this->timestamp;
+        $commit['url'] = $this->url;
+        $commit['gravatar'] = $this->gravatar;
+        $repo = new Repository((int)$this->repo);
+        $commit['repo'] = $repo->getRepo();
+        return $commit;
     }
 }

@@ -49,69 +49,21 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
   <script>
 
-  /***************************
-  *  Add your repo to the list right here!
-   ***************************/
-  var repos = [
-    {user: "silverkix", repo: "silverkixcmsbundle"},
-    {user: "Davidvdv", repo: "BCI-motoriek-app"},
-    {user: "Stollie", repo: "BCI-motoriek-website"},
-    {user: "rianna90", repo: "LibGDXGamedevelopment"},
-    {user: "randyvanvugt", repo: "hue"},
-    {user: "tmw", repo: "bci"}
-  ];
-
-  var commits = [];
-
-  // Loop through every repo and request the data
-  $(repos).each(function(index){
     $.ajax({
-        url: "https://api.github.com/repos/" + this.user + "/" + this.repo + "/commits",
-        dataType: 'jsonp',
-        success: onSuccess
+        url: "getcommits.php",
+        dataType: 'json',
+        success: function(data){
+          $(data).each(function(index)
+          {
+              var out = "<div>";
+              out += '<img src="'+this.gravatar+'"/>';
+              out += '<h2><span>'+this.author+'</span>: '+this.repo.name+'</h2>';
+              out += '<p>'+this.message+'</p>';
+              out += '</div>';
+              $("#github-commits").append(out);
+          });
+        }
     });
-  });
-
-    // Handle the returned data
-    function onSuccess(res){
-        $(res.data).each(function(){
-            commits.push(this);
-        });
-        commits.sort(SortByTime);
-
-        showCommits(commits);
-    }
-
-    // Sort the commits by time
-    function SortByTime(a, b){
-      var aTime = Date.parse(a.commit.author.date);
-      var bTime = Date.parse(b.commit.author.date);
-      return ((aTime < bTime) ? 1 : ((aTime > bTime) ? -1 : 0));
-    }
-
-    // Put the commits in the HTML
-    function showCommits(commits){
-        $("#github-commits").html('');
-        $(commits).each(function(index){
-
-            var author = this.commit.author ? this.commit.author.name : '';
-            var gravatar = this.author ? this.author.avatar_url : '' ;
-            var message = this.commit.message;
-            var repo = this.url.split("/");
-            repo = repo[5];
-
-            if(gravatar !== ''){
-                var out = "<div>";
-
-                out += '<img src="'+gravatar+'"/>';
-                out += '<h2><span>'+author+'</span>: '+repo+'</h2>';
-                out += '<p>'+message+'</p>';
-                out += '</div>';
-
-                $("#github-commits").append(out);
-            }
-        });
-    }
 
   </script>
 </body>
