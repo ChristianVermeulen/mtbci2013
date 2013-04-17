@@ -1,5 +1,5 @@
 MTBCI 2013
-=================
+===============
 
 With this little script we can see each others commits on the big screen!
 
