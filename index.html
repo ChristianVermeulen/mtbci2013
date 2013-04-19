@@ -22,17 +22,47 @@
     }
 
     #container {
-        width: 800px;
+        width: 1000px;
         margin: 0 auto;
     }
 
     #github-commits {
       margin-top: 20px;
+      width: 700px;
+      float:left;
+    }
+
+    #highscore {
+      margin-top: 20px;
+      width: 280px;
+      float:left;
+      padding-left: 20px;
+    }
+
+    #highscore ol{
+      padding-left: 30px;
+    }
+
+    #highscore ol li {
+      margin: 0;
+      padding: 15px 0;
+      border-bottom: 1px solid #888;
+      font-weight: bold;
+      height: 80px;
+    }
+
+    #highscore ol li span {
+      font-weight: normal;
+    }
+
+    #highscore ol li img {
+      float:left;
+      margin-right: 10px;
     }
 
     #github-commits div {
         height: 150px;
-        width: 800px;
+        width: 700px;
         padding: 30px 0;
         border-top: 1px solid #888;
     }
@@ -66,6 +96,10 @@
         font-size: 24px;
         text-transform: capitalize;
     }
+
+    #highscore h2 {
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -77,6 +111,11 @@
       <div id="countdown"></div>
       <p id="note"></p>
       <div id="github-commits"></div>
+      <div id="highscore">
+        <h2>Top committers</h2>
+        <ol>
+        </ol>
+      </div>
     </div>
   </div>
 
@@ -87,6 +126,9 @@
     loadCommits();
     function loadCommits()
     {
+      /**
+       * Load the latest commits
+       */
       $.ajax({
           url: "getcommits.php",
           dataType: 'json',
@@ -107,6 +149,23 @@
                 out += '</div>';
                 $("#github-commits").append(out);
             });
+          }
+      });
+
+      /**
+       * Load the top commiters
+       */
+      $.ajax({
+          url: "gettop.php",
+          dataType: 'json',
+          success: function(data){
+            var html = ''
+            $(data).each(function(index)
+            {
+              html += '<li><img src="'+this.gravatar+'">'+this.name+'<br/><span>'+this.score+' commits</span></li>'
+            });
+
+            $("#highscore ol").html(html);
           }
       });
     }
