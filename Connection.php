@@ -9,8 +9,8 @@ class Connection
         $this->db = new mysqli('localhost', 'hrprj_git', '76fvfxLe', 'hrprj_git');
 
         // fuck it, let's just check if you are working locally instead of dis-/enabling this line all the time
-        if($_SERVER['HTTP_HOST'] !== "hrprojecten.net")
-            $this->db = new mysqli('localhost', 'commits', 'mypass', 'commits');
+        //if($_SERVER['HTTP_HOST'] !== "hrprojecten.net")
+        $this->db = new mysqli('localhost', 'commits', 'mypass', 'commits');
 
         if(mysqli_connect_errno())
         {
