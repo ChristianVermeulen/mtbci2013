@@ -80,7 +80,7 @@ class Repository
 
         if(!$this->db->query($query))
         {
-            var_dump($this->db->error);
+            file_put_contents("log.txt",$this->db->error, FILE_APPEND);
         }
         $this->id = $this->db->insert_id;
     }

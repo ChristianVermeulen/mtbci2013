@@ -7,7 +7,13 @@ $db = new Connection();
 
 $commits = array();
 
-$result = $db->db->query("SELECT * FROM commits ORDER BY created DESC");
+if($_REQUEST["last"] !== "0")
+{
+    $result = $db->db->query("SELECT * FROM commits WHERE `created` > '".$_REQUEST['last']."' ORDER BY created ASC LIMIT 0,5");
+}else{
+    $result = $db->db->query("SELECT * FROM commits ORDER BY created ASC");
+}
+
 while($row = $result->fetch_object())
 {
     $commit = new Commit((int)$row->id);
