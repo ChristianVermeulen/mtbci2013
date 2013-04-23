@@ -153,9 +153,14 @@
           success: function(data){
             if($(data).length > 0)
             {
+              var hasjtag;
               $(data).each(function(index)
               {
-
+                  sounds.forEach(function(element, index) {
+                    if(this.message.indexOf('#'+element) > 1){
+                        hasjtag = element;
+                    }
+                  });
                   a = this.timestamp * 1000;
                   a = a - (60 * 60 * 10);
                   ts = new Date(a);
@@ -173,9 +178,11 @@
               if($(data).length <= 5)
               {
                 var audioElement = document.createElement('audio');
-                var current = sounds[Math.floor(Math.random()*sounds.length)];
-                console.log(current);
-                audioElement.setAttribute('src', '/sounds/'+current+'.mp3');
+                if ( hasjtag === '' ) {
+                    hasjtag = sounds[Math.floor(Math.random()*sounds.length)];
+                }
+                console.log(hasjtag);
+                audioElement.setAttribute('src', '/sounds/'+hasjtag+'.mp3');
                 $.get();
                 audioElement.addEventListener("load", function() {
                   audioElement.play();
