@@ -28,10 +28,12 @@ class Commit
     private function loadCommit($commit)
     {
         if(gettype($commit) === "integer")
-            $query = $this->db->query("SELECT * FROM commits WHERE  id = '".$commit."'");
+            $query = "SELECT * FROM commits WHERE  id = '".$commit."'";
         else
-            $query = $this->db->query("SELECT * FROM commits WHERE gitid = '".$commit->id."'");
+            $query = "SELECT * FROM commits WHERE gitid = '".$commit->id."'";
 
+
+        $query = $this->db->query($query);
         if($query->num_rows > 0 && $com = $query->fetch_object())
         {
             $this->id = $com->id;
@@ -92,10 +94,11 @@ class Commit
                 WHERE id = '.$this->id.'
                 ';
         }
-
+        file_put_contents("log.txt",$query, FILE_APPEND);
+        var_dump($query);
         if(!$this->db->query($query))
         {
-            var_dump($this->db->error);
+            file_put_contents("log.txt",$this->db->error, FILE_APPEND);
         }
     }
 
