@@ -6,7 +6,7 @@ With this little script we can see each others commits on the big screen!
 Adding your repo
 --------
 Add the following URL as Webhook URL in your repo settings: `http://hrprojecten.net/newcommit.php`.
-Test te hook to add your last 3 commits.
+Test the hook to add your last 3 commits.
 
 Todo
 --------
