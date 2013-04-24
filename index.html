@@ -4,7 +4,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>MTBCI - 2013</title>
   <meta name="author" content="Christian Vermeulen">
-  <!-- Our CSS stylesheet file -->
+  <!-- Our CSS stylesheet fil -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
         <link rel="stylesheet" href="assets/css/styles.css" />
         <link rel="stylesheet" href="assets/countdown/jquery.countdown.css" />
@@ -21,21 +21,34 @@
     }
 
     #container {
-        width: 1000px;
+        width: 90%;
         margin: 0 auto;
+        position:relative;
     }
 
     #github-commits {
+      margin-top: 0;
+      width: 57%;
+      float:left;
+      padding: 20px;
+    }
+
+    #highscore,
+    #hashies {
       margin-top: 20px;
-      width: 700px;
+      width: 20%;
       float:left;
     }
 
-    #highscore {
-      margin-top: 20px;
-      width: 280px;
-      float:left;
-      padding-left: 20px;
+    #hashies ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      font-size: 28px;
+    }
+
+    #hashies ul li {
+      margin-top: 10px;
     }
 
     #highscore ol{
@@ -59,18 +72,23 @@
       margin-right: 10px;
     }
 
-    #github-commits div {
+    #github-commits > div {
         height: 150px;
-        width: 700px;
+        width: 100%;
         padding: 30px 0;
         border-top: 1px solid #888;
     }
 
     #github-commits div img {
         float:left;
-        width: 150px;
-        height: 150px;
+        width: 20%;
         margin: 0 20px 0 0;
+    }
+
+    #github-commits div.message {
+      display: inline-block;
+      float:left;
+      width: 77%;
     }
 
     #github-commits div h2 {
@@ -114,15 +132,17 @@
 </head>
 
 <body>
-  <div id="msg">
-    <img src="fuck.gif"/>
-  </div>
   <a href="https://github.com/christianvermeulen/mtbci2013"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
   <div id="container">
     <div id="main">
       <h1>MTBCI 2013 - http://hrprojecten.net</h1>
       <div id="countdown"></div>
       <p id="note"></p>
+      <div id="hashies">
+        <h2>Geluid hash-tags</h2>
+        <ul>
+        </ul>
+      </div>
       <div id="github-commits" data-last="0"></div>
       <div id="highscore">
         <h2>Top committers</h2>
@@ -133,10 +153,15 @@
   </div>
   <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script>
-    var sounds = ['sheeeit','flikker', 'daag', 'watiser', 'nailedit', 'heisenberg', 'negro', 'burger', 'wtfg','mtfckr','lucht'];
 
-    console.log($("#github-commits").data("last"));
-    setInterval(function(){loadCommits(false);},15 * 1000);
+    var sounds = ['sheeeit','flikker', 'daag', 'watiser', 'nailedit', 'heisenberg', 'negro', 'burger', 'wtfg', 'mtfckr', 'trekfluit', 'dennis','achievement', 'jammer', 'lekker', 'lucht'];
+
+    for(var i = 0; i < sounds.length; i ++)
+    {
+      $("#hashies ul").append("<li>#"+sounds[i]+"</li>");
+    }
+
+    setInterval(function(){loadCommits(false);},5 * 1000);
     loadCommits(true);
     function loadCommits(first)
     {
@@ -150,29 +175,51 @@
           success: function(data){
             if($(data).length > 0)
             {
+              var hasjtag = '';
               $(data).each(function(index)
               {
-
+                  var _this = this;
+                  var _hash = hasjtag;
+                  sounds.forEach(function(element, index) {
+                    if(_this.message.indexOf('#'+element) > 1){
+                        _hash = element;
+                    }
+                  });
+                  hasjtag = _hash;
                   a = this.timestamp * 1000;
                   a = a - (60 * 60 * 10);
                   ts = new Date(a);
 
                   var out = "<div id="+this.id+" style='display:none'>";
                   out += '<img src="'+this.gravatar+'"/>';
+                  out += '<div class="message">';
                   out += '<h2>'+this.author+'</h2>';
                   out += '<p class="title">'+ts.getDate()+' April <span>om</span> '+('0' + ts.getHours()).slice(-2)+':'+('0' + ts.getMinutes()).slice(-2)+'h <span>naar</span> '+this.repo.name+'</p>';
                   out += '<p>'+this.message+'</p>';
-                  out += '</div>';
-                  $("#github-commits").prepend(out);
-                  $("#github-commits").data("last",this.timestamp);
+                  out += '</div></div>';
+
+                  if($(data).length > 5)
+                  {
+                    $("#github-commits").data("last",data[0].timestamp);
+                    $("#github-commits").append(out);
+                  }
+                  else
+                  {
+                    $("#github-commits").data("last",this.timestamp);
+                    $("#github-commits").prepend(out);
+                  }
+
                   $("#github-commits #"+this.id).slideDown("slow");
               });
               if($(data).length <= 5)
               {
                 var audioElement = document.createElement('audio');
-                var current = sounds[Math.floor(Math.random()*sounds.length)];
-                console.log(current);
-                audioElement.setAttribute('src', '/sounds/'+current+'.mp3');
+
+                if ( hasjtag === '' ) {
+                    hasjtag = sounds[Math.floor(Math.random()*sounds.length)];
+                }
+
+                audioElement.setAttribute('src', '/sounds/'+hasjtag+'.mp3');
                 $.get();
                 audioElement.addEventListener("load", function() {
                   audioElement.play();
