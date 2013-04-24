@@ -162,7 +162,7 @@
       $("#hashies ul").append("<li>#"+sounds[i]+"</li>");
     }
 
-    setInterval(function(){loadCommits(false);},15 * 1000);
+    setInterval(function(){loadCommits(false);},5 * 1000);
     loadCommits(true);
     function loadCommits(first)
     {
@@ -198,8 +198,18 @@
                   out += '<p class="title">'+ts.getDate()+' April <span>om</span> '+('0' + ts.getHours()).slice(-2)+':'+('0' + ts.getMinutes()).slice(-2)+'h <span>naar</span> '+this.repo.name+'</p>';
                   out += '<p>'+this.message+'</p>';
                   out += '</div></div>';
-                  $("#github-commits").prepend(out);
-                  $("#github-commits").data("last",this.timestamp);
+
+                  if($(data).length > 5)
+                  {
+                    $("#github-commits").data("last",data[0].timestamp);
+                    $("#github-commits").append(out);
+                  }
+                  else
+                  {
+                    $("#github-commits").data("last",this.timestamp);
+                    $("#github-commits").prepend(out);
+                  }
+
                   $("#github-commits #"+this.id).slideDown("slow");
               });
               if($(data).length <= 5)
